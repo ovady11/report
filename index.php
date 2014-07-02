@@ -60,6 +60,7 @@ if ($hostid != $CFG->mnet_localhost_id || $course->id == SITEID) {
 	echo $OUTPUT->header();
 }
 $mform = new report_teacherreport_form();
+
 echo $OUTPUT->heading(get_string('teacherreport','report_teacherreport') .':');
 if ($fromform = $mform->get_data()) {
 	print_teaherreport_table($fromform);
