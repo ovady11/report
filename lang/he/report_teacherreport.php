@@ -9,3 +9,5 @@ $string['teacher'] = 'מרצה';
 $string['teacherid'] = "ת.ז. מרצה";
 $string['students'] = "סטודנטים";
 $string['courses'] = "קורסים";
+$string['branch'] = "שלוחה";
+$string['path'] = "מסלול";

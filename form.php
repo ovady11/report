@@ -17,25 +17,38 @@ class report_teacherreport_form extends \moodleform {
 		global $CFG, $DB;
 		
 		
-		$results = $DB->get_records('course_categories',array("parent" => 0));
+		$results = $DB->get_records_sql('select * from '. $CFG->prefix . 'course_categories where parent = 198 and id > 1');
 		$branches = array();
+		$inparams ='';
 		foreach ($results as $result){
-			$branches[$result->id] = $result->name;
+			$branches[intval($result->id)] = $result->name;
+			$inparams .= '?,';
+		}
+		$inparams[strlen($inparams)-1]=null;
+		$courses = $DB->get_records_sql('SELECT id,name FROM '. $CFG->prefix . 'course_categories where parent in (select id from '. $CFG->prefix . 'course_categories where parent = 198)');
+		$cr = array();
+		foreach ($courses as $course) {
+			$cr[$course->id] = $course->name;
 		}
 		$mform = $this->_form;
 		
 		$mform->addElement('date_selector','fromdate',get_string('fromdate','report_teacherreport'));
 		$mform->addElement('date_selector','todate',get_string('todate','report_teacherreport'));
-		$mform->addElement('select','branch',get_string('brnach','report_teacherreport'),$branches);
-		$mform->addElement('select','speilest',get_string('path','report_teacherreport'));
+		$mform->addElement('select','branch',get_string('branch','report_teacherreport'),$branches);
+		$mform->addElement('select','course',get_string('path','report_teacherreport'),$cr);
 		
 		$this->add_action_buttons(false,get_string('getreport','report_teacherreport'));
 	}
 	
 	function display() {
 		global $PAGE, $CFG;
-		$PAGE->requires->yui_module('moodle-report_teacherreport-form','M.report_teacherreport.form.init',array( $CFG->wwwroot));
 		parent::display();
+		$PAGE->requires->yui_module('moodle-report_teacherreport-form','M.report_teacherreport.form.init',array( $CFG->wwwroot));
+	}
+	
+	function validation($data, $files)
+	{
+		$data['course'] = clean_param($data['course'], PARAM_INT);
 	}
 	
 }
