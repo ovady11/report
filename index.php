@@ -52,7 +52,6 @@ require_capability('report/teacherreport:view', $context);
 add_to_log($course->id, "course", "report teacherreport", "report/teacherreport/index.php?id=$course->id", $course->id);
 
 if ($hostid != $CFG->mnet_localhost_id || $course->id == SITEID) {
-	admin_externalpage_setup('reportteacherreport', '', null, '', array('pagelayout'=>'report'));
 	echo $OUTPUT->header();
 } else {
 	$PAGE->set_title($course->shortname .': '. $strlogs);
@@ -63,8 +62,8 @@ $mform = new report_teacherreport_form();
 
 echo $OUTPUT->heading(get_string('teacherreport','report_teacherreport') .':');
 if ($fromform = $mform->get_data()) {
-	print_teaherreport_table($fromform);
-} else { 
+	print_teaherreport_table($fromform); 
+} else {
 	$mform->display();
 }
 echo $OUTPUT->footer();

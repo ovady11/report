@@ -16,7 +16,9 @@ $outcome = new stdClass();
 $outcome->success = true;
 $outcome->response = new stdClass();
 $outcome->error = '';
-
-$outcome->response = array($categories);
+$outcome->response->id = 0;
+$outcome->response->name = get_string('allcourses','report_teacherreport');
+$categories[0] = $outcome->response;
+$outcome->response = $categories;
 echo json_encode($outcome);
 die();

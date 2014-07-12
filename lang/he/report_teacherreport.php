@@ -11,3 +11,7 @@ $string['students'] = "סטודנטים";
 $string['courses'] = "קורסים";
 $string['branch'] = "שלוחה";
 $string['path'] = "מסלול";
+$string['year'] = "שנה";
+$string['yeardescription'] = "שנת הלימודים עליה יבוצע הדוח";
+$string['allbranches'] = "כל השלוחות";
+$string['allcourses'] = "כל המסלולים ";

@@ -1,6 +1,11 @@
 <?php
 defined('MOODLE_INTERNAL') || die;
+global $DB;
+$result = $DB->get_records('course_categories',array('parent' => 0));
+$years = array();
+foreach ($result as $value) {
+	$years[$value->id] = $value->name;
+}
+reset($years);
 
-$ADMIN->add('reports', new admin_externalpage('reportteacherreport', get_string('teacherreport','report_teacherreport'), "$CFG->wwwroot/report/teacherreport/index.php?id=".SITEID));
-
-$settings = null;
+$settings->add(new admin_setting_configselect('report_teacerreport/year',get_string('year','report_teacherreport'),get_string('yeardescription','report_teacherreport'),key($years),$years));

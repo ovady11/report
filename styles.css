@@ -1,0 +1,13 @@
+@CHARSET "UTF-8";
+
+.disabeld{
+	display: none;
+}
+
+#teacherreport,#teacherreport th,#teacherreport td {
+	border: 1px solid black;
+}
+
+[id^="fullname"], [id^="username"]{
+	min-width: 8em;
+}

@@ -11,3 +11,7 @@ $string['students'] = "Students";
 $string['courses'] = "Courses";
 $string['branch'] = "branch";
 $string['path'] = "path";
+$string['year'] = "Year";
+$string['yeardescription'] = "The studies year to report on";
+$string['allbranches'] = "All Branches";
+$string['allcourses'] = "All Courses";
