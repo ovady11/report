@@ -8,4 +8,4 @@ foreach ($result as $value) {
 }
 reset($years);
 
-$settings->add(new admin_setting_configselect('report_teacerreport/year',get_string('year','report_teacherreport'),get_string('yeardescription','report_teacherreport'),key($years),$years));
+$settings->add(new admin_setting_configselect('report_teacherreport/year',get_string('year','report_teacherreport'),get_string('yeardescription','report_teacherreport'),key($years),$years));

@@ -56,8 +56,8 @@ function print_teaherreport_table($data = array()) {
 	foreach ($teacher as $username => $value) {
 		$rowspan = $value['coursecount']+1;
 		echo "<tr>\n";
-		echo "<td  rowspan=\"1\" id=\"fullname" . $username . "\"><button  class=\"main\" id=\"". $username ."\">+</button>" . $value['fullname'] ."</td>\n";
-		echo "<td rowspan=\"1\" id=\"username" . $username . "\">" . $username . "</td>";
+		echo "<td  rowspan=\"1\" id=\"fullname" . $username . "\"><button  class=\"main\" id=\"". $username ."\">+</button><a hreh=\"/user/profile.php?id=" . $username . "\">" . $value['fullname'] ."</a></td>\n";
+		echo "<td rowspan=\"1\" id=\"username" . $username . "\"><a hreh=\"/user/profile.php?id=" . $username . "\">" . $username . "</a></td>";
 		echo "<td>" . $value['students'] . "</td><td>" . $value['coursecount'] . "</td>";
 		foreach ($resources as $mod){
 			$count = isset($value[$mod->name]) ? $value[$mod->name]['count']: '0';
@@ -69,8 +69,8 @@ function print_teaherreport_table($data = array()) {
 		}
 		echo "</tr>\n";
 		foreach ($value['courses'] as $prop=>$propval) {
-			echo "<tr class=\"details ". $username . "\">\n";
-			echo "<td>" . $propval['students'] . "</td><td>" . $prop . "</td>";
+			echo "<tr class=\"details c". $username . "\">\n";
+			echo "<td>" . $propval['students'] . "</td><td><a href=\"/course/view.php?id=" . $propval['id'] . "\"" . $prop . "</td>";
 			foreach ($resources as $mod){
 				$count = isset($propval[$mod->name]) ? $propval[$mod->name]['count']: '0';
 				echo "<td>" . $count . "</td>";
@@ -120,6 +120,7 @@ function get_teacher_in_category($result){
 		$context = context_course::instance($value->id);
 		$teacher[$value->username]['students'] += count_enrolled_users($context,'mod/assign:submit');
 		$teacher[$value->username]['courses'][$value->fullname]['students'] = count_enrolled_users($context,'mod/assign:submit');
+		$teacher[$value->username]['courses'][$value->fullname]['id'] = $value->id;
 		$teacher[$value->username]['fullname'] = $value->firstname . ' ' . $value->lastname;
 	}
 	return $teacher;
