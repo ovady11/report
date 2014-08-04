@@ -18,7 +18,7 @@ function print_teaherreport_table($data = array()) {
 					"parent" => $branch->id 
 			) );
 			foreach ( $courses as $course ) {
-				$result [] = $DB->get_recordset_sql ( 'SELECT distinct c.id, c.fullname, u.username, u.firstname, u.lastname, u.id as userid FROM ' . $CFG->prefix . 'course as c, ' . $CFG->prefix . 'role_assignments AS ra, ' . $CFG->prefix . 'user AS u, ' . $CFG->prefix . 'context AS ct, ' . $CFG->prefix . 'course_categories as cc  WHERE c.category = cc.id and c.id = ct.instanceid AND ra.roleid =3 AND ra.userid = u.id AND ct.id = ra.contextid and c.timecreated >= ? and c.timecreated <= ? and cc.id = ?', array (
+				$result [] = $DB->get_recordset_sql ( 'SELECT distinct c.id, c.shortname, u.idnumber, u.username, u.firstname, u.lastname, u.id as userid FROM ' . $CFG->prefix . 'course as c, ' . $CFG->prefix . 'role_assignments AS ra, ' . $CFG->prefix . 'user AS u, ' . $CFG->prefix . 'context AS ct, ' . $CFG->prefix . 'course_categories as cc  WHERE c.category = cc.id and c.id = ct.instanceid AND ra.roleid =3 AND ra.userid = u.id AND ct.id = ra.contextid and c.timecreated >= ? and c.timecreated <= ? and cc.id = ?', array (
 						$data->fromdate,
 						$data->todate,
 						$course->id 
@@ -30,14 +30,14 @@ function print_teaherreport_table($data = array()) {
 				"parent" => $data->branch 
 		) );
 		foreach ( $courses as $course ) {
-			$result [] = $DB->get_recordset_sql ( 'SELECT distinct c.id, c.fullname, u.username, u.firstname, u.lastname, u.id as userid FROM ' . $CFG->prefix . 'course as c, ' . $CFG->prefix . 'role_assignments AS ra, ' . $CFG->prefix . 'user AS u, ' . $CFG->prefix . 'context AS ct, ' . $CFG->prefix . 'course_categories as cc  WHERE c.category = cc.id and c.id = ct.instanceid AND ra.roleid =3 AND ra.userid = u.id AND ct.id = ra.contextid and c.timecreated >= ? and c.timecreated <= ? and cc.id = ?', array (
+			$result [] = $DB->get_recordset_sql ( 'SELECT distinct c.id, c.shortname, u.idnumber, u.username, u.firstname, u.lastname, u.id as userid FROM ' . $CFG->prefix . 'course as c, ' . $CFG->prefix . 'role_assignments AS ra, ' . $CFG->prefix . 'user AS u, ' . $CFG->prefix . 'context AS ct, ' . $CFG->prefix . 'course_categories as cc  WHERE c.category = cc.id and c.id = ct.instanceid AND ra.roleid =3 AND ra.userid = u.id AND ct.id = ra.contextid and c.timecreated >= ? and c.timecreated <= ? and cc.id = ?', array (
 					$data->fromdate,
 					$data->todate,
 					$course->id 
 			) );
 		}
 	} else {
-		$result = $DB->get_recordset_sql ( 'SELECT distinct c.id, c.fullname, u.username, u.firstname, u.lastname, u.id as userid FROM ' . $CFG->prefix . 'course as c, ' . $CFG->prefix . 'role_assignments AS ra, ' . $CFG->prefix . 'user AS u, ' . $CFG->prefix . 'context AS ct, ' . $CFG->prefix . 'course_categories as cc  WHERE c.category = cc.id and c.id = ct.instanceid AND ra.roleid =3 AND ra.userid = u.id AND ct.id = ra.contextid and c.timecreated >= ? and c.timecreated <= ? and cc.id = ?', array (
+		$result = $DB->get_recordset_sql ( 'SELECT distinct c.id, c.shortname, u.idnumber, u.username, u.firstname, u.lastname, u.id as userid FROM ' . $CFG->prefix . 'course as c, ' . $CFG->prefix . 'role_assignments AS ra, ' . $CFG->prefix . 'user AS u, ' . $CFG->prefix . 'context AS ct, ' . $CFG->prefix . 'course_categories as cc  WHERE c.category = cc.id and c.id = ct.instanceid AND ra.roleid =3 AND ra.userid = u.id AND ct.id = ra.contextid and c.timecreated >= ? and c.timecreated <= ? and cc.id = ?', array (
 				$data->fromdate,
 				$data->todate,
 				$data->course 
@@ -75,7 +75,7 @@ function print_teaherreport_table($data = array()) {
 		$rowspan = $value ['coursecount'] + 1;
 		echo "<tr>\n";
 		echo "<td  rowspan=\"1\" id=\"fullname" . $username . "\"><button  class=\"main\" id=\"" . $username . "\">+</button><a href=\"/user/profile.php?id=" . $username . "\">" . $value ['fullname'] . "</a></td>\n";
-		echo "<td rowspan=\"1\" id=\"username" . $username . "\"><a href=\"/user/profile.php?id=" . $username . "\">" . $username . "</a></td>";
+		echo "<td rowspan=\"1\" id=\"username" . $username . "\"><a href=\"/user/profile.php?id=" . $username . "\">" . $value['idnumber'] . "</a></td>";
 		echo "<td>" . $value ['students'] . "</td><td>" . $value ['coursecount'] . "</td>";
 		foreach ( $resources as $mod ) {
 			$count = isset ( $value [$mod->name] ) ? $value [$mod->name] ['count'] : '0';
@@ -115,10 +115,10 @@ function get_teacher_in_category($result) {
 		foreach ( $courseModules as $mod ) {
 			if (! isset ( $teacher [$value->username] [$mod->modname] )) {
 				$teacher [$value->username] [$mod->modname] ['count'] = 0;
-				$teacher [$value->username] ['courses'] [$value->fullname] [$mod->modname] ['count'] = 0;
+				$teacher [$value->username] ['courses'] [$value->shortname] [$mod->modname] ['count'] = 0;
 				$teacher [$value->username] [$mod->modname] ['id'] = $mod->module;
 			}
-			$teacher [$value->username] ['courses'] [$value->fullname] [$mod->modname] ['count'] ++;
+			$teacher [$value->username] ['courses'] [$value->shortname] [$mod->modname] ['count'] ++;
 			$teacher [$value->username] [$mod->modname] ['count'] ++;
 		}
 		if (! isset ( $teacher [$value->username] ['coursecount'] )) {
@@ -130,9 +130,10 @@ function get_teacher_in_category($result) {
 		}
 		$context = context_course::instance ( $value->id );
 		$teacher [$value->username] ['students'] += count_enrolled_users ( $context, 'mod/assign:submit' );
-		$teacher [$value->username] ['courses'] [$value->fullname] ['students'] = count_enrolled_users ( $context, 'mod/assign:submit' );
-		$teacher [$value->username] ['courses'] [$value->fullname] ['id'] = $value->id;
+		$teacher [$value->username] ['courses'] [$value->shortname] ['students'] = count_enrolled_users ( $context, 'mod/assign:submit' );
+		$teacher [$value->username] ['courses'] [$value->shortname] ['id'] = $value->id;
 		$teacher [$value->username] ['fullname'] = $value->firstname . ' ' . $value->lastname;
+		$teacher[$value->username]['idnumber'] = $value->idnumber;
 	}
 	return $teacher;
 }
